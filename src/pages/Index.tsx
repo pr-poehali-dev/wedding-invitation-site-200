@@ -110,10 +110,78 @@ export default function Index() {
   }, []);
 
   return (
-    <div className="min-h-screen overflow-x-hidden" style={{ fontFamily: "'Nunito', sans-serif", background: "linear-gradient(180deg, #fdf5f8 0%, #f5e8f8 18%, #ecdff0 35%, #e8f0f5 55%, #f0e8f5 75%, #fde8ef 90%, #f5e0ec 100%)" }}>
+    <div className="min-h-screen overflow-x-hidden relative" style={{ fontFamily: "'Nunito', sans-serif", background: "linear-gradient(180deg, #fdf5f8 0%, #f5e8f8 18%, #ecdff0 35%, #e8f0f5 55%, #f0e8f5 75%, #fde8ef 90%, #f5e0ec 100%)" }}>
+
+      {/* ── КИСТЕВОЙ ФОН ── */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <svg width="100%" height="100%" viewBox="0 0 430 3200" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Верхняя зона — волна слева */}
+          <path d="M-20 80 Q60 40 130 90 Q200 140 270 80 Q340 20 420 70" stroke="#e8a0c0" strokeWidth="5" strokeLinecap="round" opacity="0.35"/>
+          {/* Завиток правый верх */}
+          <path d="M360 30 Q390 10 410 40 Q430 70 400 90 Q370 110 355 85 Q345 65 365 55 Q380 48 390 60" stroke="#b5d4a0" strokeWidth="3.5" strokeLinecap="round" opacity="0.4"/>
+          {/* Мазок-брызг левый */}
+          <path d="M10 180 Q35 165 55 185 Q70 200 50 210" stroke="#e8a0c0" strokeWidth="4" strokeLinecap="round" opacity="0.3"/>
+          <circle cx="15" cy="175" r="3" fill="#e8a0c0" opacity="0.3"/>
+          <circle cx="62" cy="205" r="2" fill="#e8a0c0" opacity="0.25"/>
+
+          {/* Средняя зона ~700 — широкая волна */}
+          <path d="M-10 700 Q80 650 160 710 Q240 770 320 700 Q390 635 440 690" stroke="#c4a8d8" strokeWidth="6" strokeLinecap="round" opacity="0.3"/>
+          {/* Петля-завиток слева */}
+          <path d="M20 780 Q-10 820 20 860 Q50 900 80 870 Q110 840 90 810 Q70 785 45 800" stroke="#a8c8b0" strokeWidth="3.5" strokeLinecap="round" opacity="0.35"/>
+          {/* Точки-брызги */}
+          <circle cx="380" cy="750" r="4" fill="#e0a0b8" opacity="0.3"/>
+          <circle cx="395" cy="760" r="2.5" fill="#e0a0b8" opacity="0.25"/>
+          <circle cx="370" cy="770" r="2" fill="#e0a0b8" opacity="0.2"/>
+          {/* Волнистая линия вправо */}
+          <path d="M250 820 Q290 800 310 830 Q330 860 370 845" stroke="#b8a0d0" strokeWidth="3" strokeLinecap="round" opacity="0.3"/>
+
+          {/* Зона ~1200 — диагональный мазок */}
+          <path d="M-15 1200 Q120 1150 200 1210 Q280 1270 430 1190" stroke="#d4b8e0" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" opacity="0.22"/>
+          {/* Маленькие волны справа */}
+          <path d="M300 1280 Q320 1265 340 1280 Q360 1295 380 1280 Q400 1265 420 1278" stroke="#a8c4a0" strokeWidth="2.5" strokeLinecap="round" opacity="0.35"/>
+          {/* Завиток слева */}
+          <path d="M30 1320 Q55 1295 75 1320 Q95 1345 75 1365 Q55 1385 35 1360" stroke="#e0b0c8" strokeWidth="3" strokeLinecap="round" opacity="0.3"/>
+          <circle cx="25" cy="1325" r="3" fill="#e0b0c8" opacity="0.25"/>
+
+          {/* Зона ~1700 — горизонтальная волна */}
+          <path d="M0 1720 Q70 1690 140 1730 Q210 1770 280 1720 Q350 1670 430 1710" stroke="#c8a0d4" strokeWidth="5.5" strokeLinecap="round" opacity="0.28"/>
+          {/* Мазки-штрихи */}
+          <path d="M350 1790 Q370 1778 385 1795" stroke="#b0c8a8" strokeWidth="4" strokeLinecap="round" opacity="0.35"/>
+          <path d="M355 1808 Q378 1798 390 1812" stroke="#b0c8a8" strokeWidth="3" strokeLinecap="round" opacity="0.28"/>
+          <path d="M360 1824 Q375 1816 388 1828" stroke="#b0c8a8" strokeWidth="2.5" strokeLinecap="round" opacity="0.22"/>
+          {/* Точки слева */}
+          <circle cx="25" cy="1800" r="5" fill="#d8a8c8" opacity="0.2"/>
+          <circle cx="40" cy="1815" r="3" fill="#d8a8c8" opacity="0.18"/>
+          <circle cx="18" cy="1825" r="2.5" fill="#d8a8c8" opacity="0.15"/>
+
+          {/* Зона ~2200 — большой завиток по центру */}
+          <path d="M160 2180 Q220 2140 260 2185 Q300 2230 265 2265 Q230 2300 190 2270 Q155 2240 170 2210" stroke="#c4b0dc" strokeWidth="4" strokeLinecap="round" opacity="0.3"/>
+          {/* Волна снизу слева */}
+          <path d="M-10 2300 Q50 2275 100 2308 Q150 2340 200 2305" stroke="#e0b0be" strokeWidth="5" strokeLinecap="round" opacity="0.28"/>
+          {/* Брызги правые */}
+          <circle cx="390" cy="2220" r="4.5" fill="#c0a8d8" opacity="0.25"/>
+          <circle cx="408" cy="2235" r="2.5" fill="#c0a8d8" opacity="0.2"/>
+          <circle cx="382" cy="2248" r="3" fill="#c0a8d8" opacity="0.18"/>
+
+          {/* Зона ~2700 — волна через всю ширину */}
+          <path d="M-20 2720 Q90 2670 180 2730 Q270 2790 360 2720 Q420 2670 450 2700" stroke="#d0b8e4" strokeWidth="6" strokeLinecap="round" opacity="0.25"/>
+          {/* Штрихи-трава слева */}
+          <path d="M15 2800 Q20 2770 18 2750" stroke="#a8c8a0" strokeWidth="2.5" strokeLinecap="round" opacity="0.35"/>
+          <path d="M28 2805 Q35 2772 30 2748" stroke="#a8c8a0" strokeWidth="2" strokeLinecap="round" opacity="0.3"/>
+          <path d="M40 2800 Q48 2775 44 2755" stroke="#a8c8a0" strokeWidth="2" strokeLinecap="round" opacity="0.25"/>
+          {/* Завиток правый низ */}
+          <path d="M390 2840 Q415 2820 425 2848 Q435 2876 412 2888 Q392 2898 382 2876 Q375 2858 392 2850" stroke="#e0b0c0" strokeWidth="3" strokeLinecap="round" opacity="0.3"/>
+
+          {/* Финальная зона ~3100 */}
+          <path d="M0 3100 Q110 3055 220 3110 Q330 3165 440 3095" stroke="#d4a8d0" strokeWidth="5" strokeLinecap="round" opacity="0.28"/>
+          <circle cx="200" cy="3160" r="4" fill="#e0b0c8" opacity="0.22"/>
+          <circle cx="215" cy="3175" r="2.5" fill="#e0b0c8" opacity="0.18"/>
+          <path d="M60 3140 Q80 3125 95 3145" stroke="#b0c8a8" strokeWidth="3" strokeLinecap="round" opacity="0.3"/>
+        </svg>
+      </div>
 
       {/* ── HERO ── */}
-      <section className="relative flex flex-col items-center pt-12 pb-0 px-5 overflow-hidden" style={{ background: "transparent" }}>
+      <section className="relative flex flex-col items-center pt-12 pb-0 px-5 overflow-hidden z-10" style={{ background: "transparent" }}>
 
         <Flower className="absolute top-4 left-4 text-[var(--pink-bright)]" size={30} />
         <Flower className="absolute top-6 right-6 text-[var(--green-leaf)]" size={22} />
@@ -153,7 +221,7 @@ export default function Index() {
       </section>
 
       {/* ── КАЛЕНДАРЬ + ГАЛЕРЕЯ ── */}
-      <section className="px-4 pt-2 pb-8 relative overflow-hidden" style={{ background: "transparent" }}>
+      <section className="px-4 pt-2 pb-8 relative overflow-hidden z-10" style={{ background: "transparent" }}>
         <div className="max-w-md mx-auto flex flex-col gap-6 relative z-10">
 
           {/* Календарь */}
@@ -207,7 +275,7 @@ export default function Index() {
       </section>
 
       {/* ── ТАЙМЕР ── */}
-      <section ref={timerSection.ref} className="px-5 py-10 relative overflow-hidden" style={{ background: "transparent" }}>
+      <section ref={timerSection.ref} className="px-5 py-10 relative overflow-hidden z-10" style={{ background: "transparent" }}>
         <div className="max-w-md mx-auto rounded-3xl p-7 text-center"
           style={{
             background: "rgba(255,255,255,0.25)",
@@ -235,7 +303,7 @@ export default function Index() {
       </section>
 
       {/* ── ЛОКАЦИИ ── */}
-      <section ref={locSection.ref} className="px-4 pb-10 relative overflow-hidden" style={{ background: "transparent" }}>
+      <section ref={locSection.ref} className="px-4 pb-10 relative overflow-hidden z-10" style={{ background: "transparent" }}>
         <div className="max-w-md mx-auto space-y-6">
           {LOCATIONS.map((loc, i) => (
             <div key={i} className="bg-[var(--bg-cream)] rounded-3xl p-5 shadow-md relative overflow-hidden"
@@ -272,7 +340,7 @@ export default function Index() {
       </section>
 
       {/* ── ПОЖЕЛАНИЯ ── */}
-      <section ref={wishSection.ref} className="px-4 py-12 relative overflow-hidden" style={{ background: "transparent" }}>
+      <section ref={wishSection.ref} className="px-4 py-12 relative overflow-hidden z-10" style={{ background: "transparent" }}>
         <div className="max-w-md mx-auto text-center"
           style={{
             opacity: wishSection.visible ? 1 : 0,
@@ -299,7 +367,7 @@ export default function Index() {
       </section>
 
       {/* ── ФИНАЛ ── */}
-      <section className="px-4 py-14 text-center relative overflow-hidden" style={{ background: "transparent" }}>
+      <section className="px-4 py-14 text-center relative overflow-hidden z-10" style={{ background: "transparent" }}>
         <Flower className="mx-auto text-[var(--pink-bright)] mb-3" size={24} />
         <h2 className="text-4xl text-[var(--pink-dark)] leading-snug mb-4"
           style={{ fontFamily: "'Pacifico', cursive" }}>
