@@ -15,6 +15,7 @@ const LOCATIONS = [
     date: "11 сентября 2026",
     time: "14:20",
     address: "Молодогвардейская, 238, Самара",
+    dresscode: "Официальный торжественный стиль",
     mapUrl: "https://yandex.ru/maps/?text=Молодогвардейская+238+Самара",
     img: "https://cdn.poehali.dev/projects/9ba9d2d6-628e-48a6-ae4a-468969368bae/files/1441c6d7-e15a-4727-af30-3f88a0a75055.jpg",
   },
@@ -24,6 +25,7 @@ const LOCATIONS = [
     date: "12 сентября 2026",
     time: "15:00",
     address: "массив Орлов Овраг, Кленовая улица, 35, Самара",
+    dresscode: "Свободный удобный стиль",
     mapUrl: "https://yandex.ru/maps/?text=Кленовая+35+Самара",
     img: "https://cdn.poehali.dev/projects/9ba9d2d6-628e-48a6-ae4a-468969368bae/files/9be49a14-6697-4c73-bea4-d22c030528f1.jpg",
   },
@@ -321,6 +323,7 @@ export default function Index() {
                   { icon: "Calendar" as const, text: loc.date },
                   { icon: "Clock" as const, text: loc.time },
                   { icon: "MapPin" as const, text: loc.address },
+                  { icon: "Shirt" as const, text: loc.dresscode },
                 ].map(row => (
                   <div key={row.icon} className="flex items-start gap-2">
                     <Icon name={row.icon} size={14} className="text-[var(--green-leaf)] mt-0.5 flex-shrink-0" />
