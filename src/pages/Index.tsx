@@ -1,12 +1,11 @@
 import { useEffect, useState, useRef } from "react";
 import Icon from "@/components/ui/icon";
 
-const COUPLE_PHOTO = "https://cdn.poehali.dev/projects/9ba9d2d6-628e-48a6-ae4a-468969368bae/bucket/2456051b-ee2b-4d21-a344-2fe80b5a0832.jpg";
+const COUPLE_PHOTO = "https://cdn.poehali.dev/projects/9ba9d2d6-628e-48a6-ae4a-468969368bae/bucket/aed09986-69f5-4dd1-b2c6-f25a4cd9ea54.jpg";
 
 const GALLERY = [
-  { src: COUPLE_PHOTO, rotate: "-2deg", label: "наш первый год" },
-  { src: "https://cdn.poehali.dev/projects/9ba9d2d6-628e-48a6-ae4a-468969368bae/files/e8fb7657-dc9d-4a92-abe2-6dbee4ba0c33.jpg", rotate: "1.5deg", label: "путешествия" },
-  { src: "https://cdn.poehali.dev/projects/9ba9d2d6-628e-48a6-ae4a-468969368bae/files/d3776673-a0a0-4e8d-bfb3-0544dae3257f.jpg", rotate: "-1deg", label: "вместе навсегда" },
+  { src: "https://cdn.poehali.dev/projects/9ba9d2d6-628e-48a6-ae4a-468969368bae/bucket/d7911524-8b6e-4eba-922a-74d9b458858b.jpg" },
+  { src: "https://cdn.poehali.dev/projects/9ba9d2d6-628e-48a6-ae4a-468969368bae/bucket/9bf0e94f-86f8-4004-89ae-44a8974f63b1.jpg" },
 ];
 
 const LOCATIONS = [
@@ -114,7 +113,21 @@ export default function Index() {
     <div className="min-h-screen overflow-x-hidden" style={{ background: "var(--bg-page)", fontFamily: "'Nunito', sans-serif" }}>
 
       {/* ── HERO ── */}
-      <section className="relative flex flex-col items-center pt-12 pb-0 px-5" style={{ background: "var(--bg-hero)" }}>
+      <section className="relative flex flex-col items-center pt-12 pb-0 px-5 overflow-hidden" style={{ background: "var(--bg-hero)" }}>
+        {/* Живой градиентный фон */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 right-0 w-72 h-72 rounded-full opacity-30"
+            style={{ background: "radial-gradient(circle, #f9c4df, transparent)", transform: "translate(20%, -20%)" }} />
+          <div className="absolute bottom-16 left-0 w-56 h-56 rounded-full opacity-25"
+            style={{ background: "radial-gradient(circle, #c8e6c9, transparent)", transform: "translate(-25%, 10%)" }} />
+          <div className="absolute top-1/3 left-1/2 w-96 h-96 rounded-full opacity-20"
+            style={{ background: "radial-gradient(circle, #f8bbd0, transparent)", transform: "translate(-50%, -40%)" }} />
+          {/* Пятнышки */}
+          <div className="absolute top-8 left-1/3 w-20 h-20 rounded-full opacity-15"
+            style={{ background: "radial-gradient(circle, var(--pink-bright), transparent)" }} />
+          <div className="absolute bottom-24 right-1/4 w-16 h-16 rounded-full opacity-20"
+            style={{ background: "radial-gradient(circle, var(--green-leaf), transparent)" }} />
+        </div>
         <Flower className="absolute top-4 left-4 text-[var(--pink-bright)]" size={30} />
         <Flower className="absolute top-6 right-6 text-[var(--green-leaf)]" size={22} />
         <Flower className="absolute top-24 right-3 text-[var(--pink-bright)]" size={16} />
@@ -159,8 +172,18 @@ export default function Index() {
       </section>
 
       {/* ── КАЛЕНДАРЬ + ГАЛЕРЕЯ ── */}
-      <section style={{ background: "var(--bg-purple)" }} className="px-4 pt-2 pb-8">
-        <div className="max-w-md mx-auto flex flex-col gap-6">
+      <section className="px-4 pt-2 pb-8 relative overflow-hidden" style={{ background: "var(--bg-purple)" }}>
+        {/* Декоративный фон секции */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 left-0 w-64 h-64 rounded-full opacity-20"
+            style={{ background: "radial-gradient(circle, var(--pink-bright), transparent)", transform: "translate(-30%, -30%)" }} />
+          <div className="absolute bottom-0 right-0 w-80 h-80 rounded-full opacity-15"
+            style={{ background: "radial-gradient(circle, var(--pink-medium), transparent)", transform: "translate(30%, 30%)" }} />
+          <div className="absolute top-1/2 left-1/2 w-48 h-48 rounded-full opacity-10"
+            style={{ background: "radial-gradient(circle, var(--green-leaf), transparent)", transform: "translate(-50%, -50%)" }} />
+        </div>
+
+        <div className="max-w-md mx-auto flex flex-col gap-6 relative z-10">
 
           {/* Календарь */}
           <div className="bg-[var(--bg-cream)] rounded-3xl p-5 shadow-md relative">
@@ -195,18 +218,17 @@ export default function Index() {
             </div>
           </div>
 
-          {/* Поляроид-галерея */}
-          <div ref={galSection.ref} className="flex flex-col items-center gap-5">
+          {/* Галерея — сетка без поляроида */}
+          <div ref={galSection.ref} className="grid grid-cols-2 gap-3">
             {GALLERY.map((photo, i) => (
-              <div key={i} className="bg-white rounded-lg shadow-xl p-3 pb-7 w-64"
+              <div key={i} className="overflow-hidden rounded-2xl shadow-lg"
                 style={{
-                  transform: galSection.visible ? `rotate(${photo.rotate})` : "rotate(0deg) translateY(2rem)",
+                  aspectRatio: "3/4",
                   opacity: galSection.visible ? 1 : 0,
-                  transition: `opacity 0.6s ease ${i * 200}ms, transform 0.6s ease ${i * 200}ms`,
+                  transform: galSection.visible ? "translateY(0) scale(1)" : "translateY(1.5rem) scale(0.95)",
+                  transition: `opacity 0.6s ease ${i * 180}ms, transform 0.6s ease ${i * 180}ms`,
                 }}>
-                <img src={photo.src} alt={photo.label} className="w-full h-44 object-cover rounded" />
-                <p className="text-center text-[var(--pink-dark)] mt-2 text-base"
-                  style={{ fontFamily: "'Caveat', cursive" }}>{photo.label}</p>
+                <img src={photo.src} alt="" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
               </div>
             ))}
           </div>
@@ -214,7 +236,8 @@ export default function Index() {
       </section>
 
       {/* ── ТАЙМЕР ── */}
-      <section ref={timerSection.ref} className="px-5 py-10" style={{ background: "var(--bg-purple)" }}>
+      <section ref={timerSection.ref} className="px-5 py-10 relative overflow-hidden"
+        style={{ background: "linear-gradient(135deg, #e8d5f0 0%, #f5dde8 50%, #ddeae8 100%)" }}>
         <div className="max-w-md mx-auto rounded-3xl p-7 text-center"
           style={{
             background: "rgba(255,255,255,0.25)",
@@ -242,7 +265,8 @@ export default function Index() {
       </section>
 
       {/* ── ЛОКАЦИИ ── */}
-      <section ref={locSection.ref} className="px-4 pb-10" style={{ background: "var(--bg-purple)" }}>
+      <section ref={locSection.ref} className="px-4 pb-10 relative overflow-hidden"
+        style={{ background: "linear-gradient(160deg, #f0e4f5 0%, #ecdff0 60%, #e8f0e4 100%)" }}>
         <div className="max-w-md mx-auto space-y-6">
           {LOCATIONS.map((loc, i) => (
             <div key={i} className="bg-[var(--bg-cream)] rounded-3xl p-5 shadow-md relative overflow-hidden"
@@ -284,7 +308,8 @@ export default function Index() {
       </section>
 
       {/* ── ПОЖЕЛАНИЯ ── */}
-      <section ref={wishSection.ref} className="px-4 py-12" style={{ background: "var(--bg-cream)" }}>
+      <section ref={wishSection.ref} className="px-4 py-12 relative overflow-hidden"
+        style={{ background: "linear-gradient(180deg, #fdf8f0 0%, #fde8ef 100%)" }}>
         <div className="max-w-md mx-auto text-center"
           style={{
             opacity: wishSection.visible ? 1 : 0,
@@ -311,7 +336,8 @@ export default function Index() {
       </section>
 
       {/* ── ФИНАЛ ── */}
-      <section className="px-4 py-14 text-center" style={{ background: "var(--bg-purple)" }}>
+      <section className="px-4 py-14 text-center relative overflow-hidden"
+        style={{ background: "linear-gradient(135deg, #f5dde8 0%, #e8d5f0 50%, #d5e8e0 100%)" }}>
         <Flower className="mx-auto text-[var(--pink-bright)] mb-3" size={24} />
         <h2 className="text-4xl text-[var(--pink-dark)] leading-snug mb-4"
           style={{ fontFamily: "'Pacifico', cursive" }}>
