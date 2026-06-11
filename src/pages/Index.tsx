@@ -1,272 +1,332 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Icon from "@/components/ui/icon";
 
-const GALLERY_PHOTOS = [
+const COUPLE_PHOTO = "https://cdn.poehali.dev/projects/9ba9d2d6-628e-48a6-ae4a-468969368bae/bucket/2456051b-ee2b-4d21-a344-2fe80b5a0832.jpg";
+
+const GALLERY = [
+  { src: COUPLE_PHOTO, rotate: "-2deg", label: "наш первый год" },
+  { src: "https://cdn.poehali.dev/projects/9ba9d2d6-628e-48a6-ae4a-468969368bae/files/e8fb7657-dc9d-4a92-abe2-6dbee4ba0c33.jpg", rotate: "1.5deg", label: "путешествия" },
+  { src: "https://cdn.poehali.dev/projects/9ba9d2d6-628e-48a6-ae4a-468969368bae/files/d3776673-a0a0-4e8d-bfb3-0544dae3257f.jpg", rotate: "-1deg", label: "вместе навсегда" },
+];
+
+const LOCATIONS = [
   {
-    src: "https://cdn.poehali.dev/projects/9ba9d2d6-628e-48a6-ae4a-468969368bae/files/e8fb7657-dc9d-4a92-abe2-6dbee4ba0c33.jpg",
-    caption: "Наша история начинается",
+    icon: "💍",
+    title: "Регистрация брака",
+    date: "11 сентября 2026",
+    time: "14:20",
+    address: "Молодогвардейская, 238, Самара",
+    mapUrl: "https://yandex.ru/maps/?text=Молодогвардейская+238+Самара",
+    img: "https://cdn.poehali.dev/projects/9ba9d2d6-628e-48a6-ae4a-468969368bae/files/1441c6d7-e15a-4727-af30-3f88a0a75055.jpg",
   },
   {
-    src: "https://cdn.poehali.dev/projects/9ba9d2d6-628e-48a6-ae4a-468969368bae/files/62262add-77eb-4477-aec7-f01affc0cc72.jpg",
-    caption: "Детали нашего дня",
-  },
-  {
-    src: "https://cdn.poehali.dev/projects/9ba9d2d6-628e-48a6-ae4a-468969368bae/files/d3776673-a0a0-4e8d-bfb3-0544dae3257f.jpg",
-    caption: "Путь к счастью",
+    icon: "🥂",
+    title: "Праздничный банкет",
+    date: "12 сентября 2026",
+    time: "15:00",
+    address: "массив Орлов Овраг, Кленовая улица, 35, Самара",
+    mapUrl: "https://yandex.ru/maps/?text=Кленовая+35+Самара",
+    img: "https://cdn.poehali.dev/projects/9ba9d2d6-628e-48a6-ae4a-468969368bae/files/9be49a14-6697-4c73-bea4-d22c030528f1.jpg",
   },
 ];
 
-function useInView(threshold = 0.15) {
+function Flower({ className = "", size = 28 }: { className?: string; size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 40 40" className={className} fill="none">
+      <circle cx="20" cy="20" r="5" fill="currentColor" opacity="0.9" />
+      {[0, 60, 120, 180, 240, 300].map((deg, i) => (
+        <ellipse key={i} cx="20" cy="20" rx="3.5" ry="8" fill="currentColor" opacity="0.5"
+          transform={`rotate(${deg} 20 20) translate(0 -9)`} />
+      ))}
+    </svg>
+  );
+}
+
+function Squiggle({ className = "" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 120 20" fill="none">
+      <path d="M0 10 Q15 2 30 10 Q45 18 60 10 Q75 2 90 10 Q105 18 120 10"
+        stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
+    </svg>
+  );
+}
+
+function Heart({ className = "" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 21C12 21 3 14 3 8a4 4 0 0 1 8-1.16A4 4 0 0 1 21 8c0 6-9 13-9 13z" />
+    </svg>
+  );
+}
+
+const DAYS_HEADER = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
+function buildCalendar() {
+  const cells: (number | null)[] = [null]; // Сентябрь 2026 начинается со вторника
+  for (let d = 1; d <= 30; d++) cells.push(d);
+  while (cells.length % 7 !== 0) cells.push(null);
+  return cells;
+}
+
+const TARGET = new Date("2026-09-11T14:20:00");
+function getCountdown() {
+  const diff = TARGET.getTime() - Date.now();
+  if (diff <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+  const s = Math.floor(diff / 1000);
+  return {
+    days: Math.floor(s / 86400),
+    hours: Math.floor((s % 86400) / 3600),
+    minutes: Math.floor((s % 3600) / 60),
+    seconds: s % 60,
+  };
+}
+function pad(n: number) { return String(n).padStart(2, "0"); }
+
+function useInView() {
   const ref = useRef<HTMLDivElement>(null);
-  const [inView, setInView] = useState(false);
+  const [visible, setVisible] = useState(false);
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     const obs = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          setInView(true);
-          obs.disconnect();
-        }
-      },
-      { threshold }
+      ([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } },
+      { threshold: 0.1 }
     );
     obs.observe(el);
     return () => obs.disconnect();
-  }, [threshold]);
-  return { ref, inView };
-}
-
-function FloralDecor({ className = "" }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M100 30 Q80 10 60 25 Q40 40 20 20" stroke="currentColor" strokeWidth="0.8" strokeLinecap="round" fill="none" opacity="0.6" />
-      <path d="M100 30 Q120 10 140 25 Q160 40 180 20" stroke="currentColor" strokeWidth="0.8" strokeLinecap="round" fill="none" opacity="0.6" />
-      <circle cx="100" cy="30" r="2.5" fill="currentColor" opacity="0.8" />
-      <circle cx="60" cy="25" r="1.5" fill="currentColor" opacity="0.5" />
-      <circle cx="140" cy="25" r="1.5" fill="currentColor" opacity="0.5" />
-      <path d="M55 20 Q60 15 65 22" stroke="currentColor" strokeWidth="0.7" fill="none" opacity="0.5" />
-      <path d="M135 20 Q140 15 145 22" stroke="currentColor" strokeWidth="0.7" fill="none" opacity="0.5" />
-      <path d="M95 25 Q100 18 105 25" stroke="currentColor" strokeWidth="0.7" fill="none" opacity="0.7" />
-    </svg>
-  );
-}
-
-function LeafSprig({ className = "" }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 80 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M40 110 Q40 70 40 30" stroke="currentColor" strokeWidth="0.8" strokeLinecap="round" />
-      <path d="M40 80 Q20 65 15 45 Q25 55 40 65" stroke="currentColor" strokeWidth="0.7" fill="currentColor" fillOpacity="0.15" />
-      <path d="M40 60 Q60 45 65 25 Q55 35 40 45" stroke="currentColor" strokeWidth="0.7" fill="currentColor" fillOpacity="0.15" />
-      <path d="M40 95 Q22 82 18 65" stroke="currentColor" strokeWidth="0.6" fill="none" opacity="0.6" />
-    </svg>
-  );
+  }, []);
+  return { ref, visible };
 }
 
 export default function Index() {
-  const dateSection = useInView();
-  const gallerySection = useInView();
-  const [activePhoto, setActivePhoto] = useState<number | null>(null);
+  const [countdown, setCountdown] = useState(getCountdown());
+  const calendarCells = buildCalendar();
+  const timerSection = useInView();
+  const locSection = useInView();
+  const galSection = useInView();
+  const wishSection = useInView();
+
+  useEffect(() => {
+    const id = setInterval(() => setCountdown(getCountdown()), 1000);
+    return () => clearInterval(id);
+  }, []);
 
   return (
-    <div className="min-h-screen bg-[var(--cream)] font-golos overflow-x-hidden">
+    <div className="min-h-screen overflow-x-hidden" style={{ background: "var(--bg-page)", fontFamily: "'Nunito', sans-serif" }}>
 
-      {/* Background texture */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <div
-          className="absolute inset-0"
+      {/* ── HERO ── */}
+      <section className="relative flex flex-col items-center pt-12 pb-0 px-5" style={{ background: "var(--bg-hero)" }}>
+        <Flower className="absolute top-4 left-4 text-[var(--pink-bright)]" size={30} />
+        <Flower className="absolute top-6 right-6 text-[var(--green-leaf)]" size={22} />
+        <Flower className="absolute top-24 right-3 text-[var(--pink-bright)]" size={16} />
+        <Flower className="absolute top-36 left-2 text-[var(--green-leaf)]" size={14} />
+
+        {/* Круглое фото */}
+        <div className="relative mb-5" style={{ animation: "popIn 0.7s cubic-bezier(0.34,1.56,0.64,1) both" }}>
+          <div className="w-48 h-48 rounded-full overflow-hidden border-4 border-white shadow-xl">
+            <img src={COUPLE_PHOTO} alt="Юля и Дима" className="w-full h-full object-cover object-top" />
+          </div>
+          <Flower className="absolute -bottom-2 -right-2 text-[var(--pink-bright)]" size={26} />
+          <Flower className="absolute -top-1 -left-2 text-[var(--green-leaf)]" size={18} />
+        </div>
+
+        <h1 className="text-5xl text-[var(--pink-dark)] mb-1 text-center"
+          style={{ fontFamily: "'Pacifico', cursive", animation: "fadeUp 0.6s ease 0.2s both" }}>
+          Юля &amp; Дима
+        </h1>
+        <Squiggle className="w-36 text-[var(--pink-medium)] mb-3" />
+
+        <div className="border-2 border-[var(--green-leaf)] rounded-full px-6 py-2 mb-5"
+          style={{ animation: "fadeUp 0.6s ease 0.4s both" }}>
+          <p className="font-bold text-[var(--green-leaf)] text-base">11–12 сентября 2026</p>
+        </div>
+
+        <p className="text-center text-[var(--pink-dark)] text-sm leading-relaxed max-w-xs mb-6"
+          style={{ animation: "fadeUp 0.6s ease 0.5s both" }}>
+          С радостью приглашаем вас<br />разделить с нами самые счастливые<br />моменты нашей жизни!
+        </p>
+
+        <div className="flex flex-col items-center gap-1 mb-4 text-[var(--pink-medium)]"
+          style={{ animation: "bounce 2s 1s infinite" }}>
+          <Heart className="w-5 h-5" />
+          <Icon name="ChevronDown" size={18} className="text-[var(--pink-medium)]" />
+        </div>
+
+        <div className="w-full overflow-hidden leading-none mt-2">
+          <svg viewBox="0 0 500 40" className="w-full" style={{ fill: "var(--bg-purple)" }}>
+            <path d="M0 20 Q62.5 0 125 20 Q187.5 40 250 20 Q312.5 0 375 20 Q437.5 40 500 20 L500 40 L0 40 Z" />
+          </svg>
+        </div>
+      </section>
+
+      {/* ── КАЛЕНДАРЬ + ГАЛЕРЕЯ ── */}
+      <section style={{ background: "var(--bg-purple)" }} className="px-4 pt-2 pb-8">
+        <div className="max-w-md mx-auto flex flex-col gap-6">
+
+          {/* Календарь */}
+          <div className="bg-[var(--bg-cream)] rounded-3xl p-5 shadow-md relative">
+            <Flower className="absolute top-3 right-3 text-[var(--pink-bright)]" size={20} />
+            <div className="border-2 border-[var(--green-leaf)] rounded-full px-5 py-1.5 inline-block mb-3">
+              <span className="text-[var(--green-leaf)] font-bold text-lg" style={{ fontFamily: "'Pacifico', cursive" }}>Календарь</span>
+            </div>
+            <p className="text-center font-bold text-[var(--pink-dark)] mb-3">Сентябрь 2026</p>
+            <div className="grid grid-cols-7 text-center gap-y-2">
+              {DAYS_HEADER.map(d => (
+                <span key={d} className="text-xs font-bold text-[var(--pink-dark)] opacity-60">{d}</span>
+              ))}
+              {calendarCells.map((day, i) => (
+                <span key={i} className={`text-sm w-8 h-8 flex items-center justify-center mx-auto rounded-full font-semibold
+                  ${day === 11 || day === 12 ? "bg-[var(--pink-bright)] text-white ring-2 ring-[var(--pink-dark)]" : "text-[var(--pink-dark)]"}
+                  ${!day ? "opacity-0 pointer-events-none" : ""}
+                `}>{day}</span>
+              ))}
+            </div>
+            <div className="mt-4 space-y-1.5">
+              {[
+                { day: "11 сентября", label: "регистрация брака" },
+                { day: "12 сентября", label: "праздничный банкет" },
+              ].map(item => (
+                <div key={item.day} className="flex items-center gap-2">
+                  <Heart className="w-4 h-4 text-[var(--pink-bright)] flex-shrink-0" />
+                  <span className="text-xs text-[var(--pink-dark)]">
+                    <b>{item.day}</b> — {item.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Поляроид-галерея */}
+          <div ref={galSection.ref} className="flex flex-col items-center gap-5">
+            {GALLERY.map((photo, i) => (
+              <div key={i} className="bg-white rounded-lg shadow-xl p-3 pb-7 w-64"
+                style={{
+                  transform: galSection.visible ? `rotate(${photo.rotate})` : "rotate(0deg) translateY(2rem)",
+                  opacity: galSection.visible ? 1 : 0,
+                  transition: `opacity 0.6s ease ${i * 200}ms, transform 0.6s ease ${i * 200}ms`,
+                }}>
+                <img src={photo.src} alt={photo.label} className="w-full h-44 object-cover rounded" />
+                <p className="text-center text-[var(--pink-dark)] mt-2 text-base"
+                  style={{ fontFamily: "'Caveat', cursive" }}>{photo.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── ТАЙМЕР ── */}
+      <section ref={timerSection.ref} className="px-5 py-10" style={{ background: "var(--bg-purple)" }}>
+        <div className="max-w-md mx-auto rounded-3xl p-7 text-center"
           style={{
-            backgroundImage: `radial-gradient(circle at 20% 20%, rgba(180,160,130,0.08) 0%, transparent 50%),
-              radial-gradient(circle at 80% 80%, rgba(140,120,100,0.07) 0%, transparent 50%),
-              radial-gradient(circle at 50% 50%, rgba(200,180,150,0.05) 0%, transparent 70%)`,
-          }}
-        />
-      </div>
-
-      {/* ===== HERO ===== */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center px-6 text-center z-10">
-        <LeafSprig className="absolute top-8 left-6 w-12 h-20 text-[var(--sage)] opacity-40 rotate-[-20deg]" />
-        <LeafSprig className="absolute top-8 right-6 w-12 h-20 text-[var(--sage)] opacity-40 rotate-[20deg] scale-x-[-1]" />
-        <LeafSprig className="absolute bottom-16 left-10 w-10 h-16 text-[var(--terracotta)] opacity-25 rotate-[30deg]" />
-        <LeafSprig className="absolute bottom-16 right-10 w-10 h-16 text-[var(--terracotta)] opacity-25 rotate-[-30deg] scale-x-[-1]" />
-
-        <div className="space-y-6 max-w-2xl mx-auto">
-          <p
-            className="font-caveat text-[var(--terracotta)] text-xl tracking-widest uppercase opacity-0"
-            style={{ animation: "fadeInUp 0.8s ease forwards 0.2s" }}
-          >
-            вы приглашены
-          </p>
-
-          <div className="opacity-0" style={{ animation: "fadeInUp 0.8s ease forwards 0.5s" }}>
-            <h1 className="font-cormorant text-[clamp(3.5rem,12vw,7rem)] leading-none font-light text-[var(--bark)] tracking-tight">
-              Анна
-            </h1>
-            <div className="flex items-center justify-center gap-4 my-1">
-              <FloralDecor className="w-32 text-[var(--sage)] h-8" />
-              <span className="font-cormorant text-3xl text-[var(--terracotta)] font-light italic">&amp;</span>
-              <FloralDecor className="w-32 text-[var(--sage)] h-8 scale-x-[-1]" />
-            </div>
-            <h1 className="font-cormorant text-[clamp(3.5rem,12vw,7rem)] leading-none font-light text-[var(--bark)] tracking-tight">
-              Михаил
-            </h1>
-          </div>
-
-          <div className="opacity-0" style={{ animation: "fadeInUp 0.8s ease forwards 0.9s" }}>
-            <FloralDecor className="w-48 text-[var(--terracotta)] h-10 mx-auto opacity-60" />
-            <p className="font-cormorant italic text-[var(--bark-light)] text-xl mt-4 font-light leading-relaxed">
-              Два сердца, одна дорога —{" "}
-              <span className="text-[var(--terracotta)]">навстречу общей судьбе</span>
-            </p>
-          </div>
-        </div>
-
-        <div
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-0"
-          style={{ animation: "fadeInUp 0.8s ease forwards 1.5s" }}
-        >
-          <p className="font-golos text-[var(--bark-light)] text-xs tracking-[0.2em] uppercase">листайте</p>
-          <div className="w-px h-12 bg-gradient-to-b from-[var(--terracotta)] to-transparent" />
-        </div>
-      </section>
-
-      {/* ===== DATE / TIME / PLACE ===== */}
-      <section ref={dateSection.ref} className="relative py-28 px-6 z-10">
-        <div className="max-w-3xl mx-auto">
-          <div
-            className="text-center mb-16 transition-all duration-1000"
-            style={{
-              opacity: dateSection.inView ? 1 : 0,
-              transform: dateSection.inView ? "translateY(0)" : "translateY(2.5rem)",
-            }}
-          >
-            <p className="font-caveat text-[var(--terracotta)] text-lg tracking-widest mb-3">наш особенный день</p>
-            <h2 className="font-cormorant text-5xl md:text-6xl text-[var(--bark)] font-light">Детали торжества</h2>
-            <FloralDecor className="w-44 text-[var(--sage)] h-10 mx-auto mt-4 opacity-70" />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            background: "rgba(255,255,255,0.25)",
+            backdropFilter: "blur(8px)",
+            opacity: timerSection.visible ? 1 : 0,
+            transform: timerSection.visible ? "translateY(0)" : "translateY(2rem)",
+            transition: "opacity 0.8s ease, transform 0.8s ease",
+          }}>
+          <p className="text-[var(--pink-dark)] font-semibold mb-5 text-sm tracking-wide">До регистрации брака осталось:</p>
+          <div className="flex justify-center gap-3">
             {[
-              { icon: "Calendar", label: "Дата", main: "14 сентября", sub: "2025 года", delay: 0 },
-              { icon: "Clock", label: "Время", main: "16:00", sub: "сбор гостей с 15:30", delay: 150 },
-              {
-                icon: "MapPin",
-                label: "Место",
-                main: "Усадьба «Берёзовая роща»",
-                sub: "Московская область, Дмитровское ш., 42",
-                delay: 300,
-              },
-            ].map((item) => (
-              <div
-                key={item.label}
-                className="group relative bg-[var(--parchment)] rounded-2xl p-8 text-center border border-[var(--sage-light)] hover:border-[var(--terracotta)] transition-all duration-500 hover:shadow-lg hover:-translate-y-1"
-                style={{
-                  opacity: dateSection.inView ? 1 : 0,
-                  transform: dateSection.inView ? "translateY(0)" : "translateY(2rem)",
-                  transition: `opacity 0.8s ease ${item.delay}ms, transform 0.8s ease ${item.delay}ms, box-shadow 0.3s, border-color 0.3s`,
-                }}
-              >
-                <div className="w-12 h-12 rounded-full bg-[var(--sage-light)] flex items-center justify-center mx-auto mb-5 group-hover:bg-[var(--terracotta-light)] transition-colors duration-300">
-                  <Icon name={item.icon as "Calendar"} size={20} className="text-[var(--bark)]" />
-                </div>
-                <p className="font-caveat text-[var(--terracotta)] text-sm tracking-widest uppercase mb-2">{item.label}</p>
-                <p className="font-cormorant text-2xl text-[var(--bark)] font-medium mb-1">{item.main}</p>
-                <p className="font-golos text-[var(--bark-light)] text-sm">{item.sub}</p>
-                <LeafSprig className="absolute top-3 right-3 w-6 h-9 text-[var(--sage)] opacity-20 rotate-[15deg]" />
+              { val: countdown.days, label: "дней" },
+              { val: countdown.hours, label: "часов" },
+              { val: countdown.minutes, label: "минуты" },
+              { val: countdown.seconds, label: "секунд" },
+            ].map(({ val, label }) => (
+              <div key={label} className="bg-white rounded-2xl px-3 py-3 min-w-[58px] shadow-md text-center">
+                <p className="text-3xl font-bold text-[var(--pink-dark)] leading-none"
+                  style={{ fontFamily: "'Pacifico', cursive" }}>{pad(val)}</p>
+                <p className="text-xs text-[var(--pink-dark)] opacity-60 mt-1">{label}</p>
               </div>
             ))}
           </div>
+        </div>
+      </section>
 
-          <div
-            className="mt-12 text-center"
-            style={{
-              opacity: dateSection.inView ? 1 : 0,
-              transform: dateSection.inView ? "translateY(0)" : "translateY(2rem)",
-              transition: "opacity 0.8s ease 500ms, transform 0.8s ease 500ms",
-            }}
-          >
-            <div className="inline-block border border-dashed border-[var(--terracotta)] rounded-2xl px-8 py-5">
-              <p className="font-caveat text-[var(--terracotta)] text-base mb-1">дресс-код</p>
-              <p className="font-cormorant text-xl text-[var(--bark)] font-light italic">
-                Натуральные тона — беж, терракота, оливка
-              </p>
+      {/* ── ЛОКАЦИИ ── */}
+      <section ref={locSection.ref} className="px-4 pb-10" style={{ background: "var(--bg-purple)" }}>
+        <div className="max-w-md mx-auto space-y-6">
+          {LOCATIONS.map((loc, i) => (
+            <div key={i} className="bg-[var(--bg-cream)] rounded-3xl p-5 shadow-md relative overflow-hidden"
+              style={{
+                opacity: locSection.visible ? 1 : 0,
+                transform: locSection.visible ? "translateY(0)" : "translateY(2rem)",
+                transition: `opacity 0.7s ease ${i * 200}ms, transform 0.7s ease ${i * 200}ms`,
+              }}>
+              <Flower className="absolute top-3 right-3 text-[var(--pink-bright)] opacity-30" size={22} />
+              <h3 className="font-bold text-[var(--pink-dark)] text-lg mb-3 flex items-center gap-2">
+                <span>{loc.icon}</span> {loc.title}
+              </h3>
+              <div className="flex gap-4">
+                <div className="flex-1 space-y-2">
+                  {[
+                    { icon: "Calendar" as const, text: loc.date },
+                    { icon: "Clock" as const, text: loc.time },
+                    { icon: "MapPin" as const, text: loc.address },
+                  ].map(row => (
+                    <div key={row.icon} className="flex items-start gap-2">
+                      <Icon name={row.icon} size={14} className="text-[var(--green-leaf)] mt-0.5 flex-shrink-0" />
+                      <span className="text-xs text-[var(--pink-dark)] leading-snug">{row.text}</span>
+                    </div>
+                  ))}
+                  <a href={loc.mapUrl} target="_blank" rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 mt-3 text-white text-xs font-bold px-4 py-2 rounded-full shadow hover:opacity-90 transition-opacity"
+                    style={{ background: "var(--green-leaf)" }}>
+                    Открыть карту <Icon name="Navigation" size={12} />
+                  </a>
+                </div>
+                <div className="w-28 h-28 rounded-2xl overflow-hidden flex-shrink-0 shadow">
+                  <img src={loc.img} alt={loc.title} className="w-full h-full object-cover" />
+                </div>
+              </div>
+              <Squiggle className="w-24 text-[var(--pink-medium)] opacity-30 mt-3" />
             </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── ПОЖЕЛАНИЯ ── */}
+      <section ref={wishSection.ref} className="px-4 py-12" style={{ background: "var(--bg-cream)" }}>
+        <div className="max-w-md mx-auto text-center"
+          style={{
+            opacity: wishSection.visible ? 1 : 0,
+            transform: wishSection.visible ? "translateY(0)" : "translateY(2rem)",
+            transition: "opacity 0.8s ease, transform 0.8s ease",
+          }}>
+          <Flower className="mx-auto text-[var(--pink-bright)] mb-4" size={28} />
+          <div className="border-2 border-[var(--green-leaf)] rounded-full px-6 py-2 inline-block mb-4">
+            <span className="text-[var(--green-leaf)] font-bold text-xl" style={{ fontFamily: "'Pacifico', cursive" }}>Пожелания</span>
+          </div>
+          <Squiggle className="w-32 mx-auto text-[var(--pink-medium)] mb-5" />
+          <p className="text-[var(--pink-dark)] text-sm leading-relaxed">
+            Для нас самое главное — ваше<br />присутствие и хорошее настроение.
+          </p>
+          <p className="text-[var(--pink-dark)] text-sm leading-relaxed mt-3">
+            Если вы захотите поздравить нас подарком,<br />мы будем рады поддержке наших<br />будущих семейных планов и путешествий.
+          </p>
+          <div className="flex justify-center items-center gap-3 mt-5 text-[var(--pink-medium)]">
+            <Squiggle className="w-16" />
+            <Heart className="w-5 h-5" />
+            <Squiggle className="w-16 scale-x-[-1]" />
           </div>
         </div>
       </section>
 
-      {/* ===== GALLERY ===== */}
-      <section ref={gallerySection.ref} className="relative py-28 px-6 z-10">
-        <div className="max-w-5xl mx-auto">
-          <div
-            className="text-center mb-16 transition-all duration-1000"
-            style={{
-              opacity: gallerySection.inView ? 1 : 0,
-              transform: gallerySection.inView ? "translateY(0)" : "translateY(2.5rem)",
-            }}
-          >
-            <p className="font-caveat text-[var(--terracotta)] text-lg tracking-widest mb-3">наша история</p>
-            <h2 className="font-cormorant text-5xl md:text-6xl text-[var(--bark)] font-light">Моменты вместе</h2>
-            <FloralDecor className="w-44 text-[var(--sage)] h-10 mx-auto mt-4 opacity-70" />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {GALLERY_PHOTOS.map((photo, i) => (
-              <div
-                key={i}
-                className="group relative overflow-hidden rounded-2xl cursor-pointer"
-                style={{
-                  aspectRatio: i === 1 ? "3/4" : "4/5",
-                  opacity: gallerySection.inView ? 1 : 0,
-                  transform: gallerySection.inView ? "translateY(0)" : "translateY(3rem)",
-                  transition: `opacity 0.8s ease ${i * 180}ms, transform 0.8s ease ${i * 180}ms`,
-                }}
-                onClick={() => setActivePhoto(i)}
-              >
-                <img
-                  src={photo.src}
-                  alt={photo.caption}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-5">
-                  <p className="font-caveat text-white text-lg">{photo.caption}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+      {/* ── ФИНАЛ ── */}
+      <section className="px-4 py-14 text-center" style={{ background: "var(--bg-purple)" }}>
+        <Flower className="mx-auto text-[var(--pink-bright)] mb-3" size={24} />
+        <h2 className="text-4xl text-[var(--pink-dark)] leading-snug mb-4"
+          style={{ fontFamily: "'Pacifico', cursive" }}>
+          С нетерпением<br />ждём встречи!
+        </h2>
+        <Squiggle className="w-28 mx-auto text-[var(--pink-medium)] mb-3" />
+        <p className="text-2xl text-[var(--pink-dark)]" style={{ fontFamily: "'Pacifico', cursive" }}>Юля &amp; Дима</p>
+        <Heart className="w-6 h-6 text-[var(--pink-bright)] mx-auto mt-2" />
+        <p className="text-[var(--green-leaf)] font-bold mt-2 text-sm">11–12 сентября 2026</p>
+        <div className="flex justify-center gap-3 mt-5">
+          <Flower className="text-[var(--green-leaf)] opacity-50" size={18} />
+          <Flower className="text-[var(--pink-bright)] opacity-70" size={24} />
+          <Flower className="text-[var(--green-leaf)] opacity-50" size={18} />
         </div>
       </section>
-
-      {/* ===== FOOTER ===== */}
-      <footer className="relative py-16 text-center z-10">
-        <FloralDecor className="w-48 text-[var(--terracotta)] h-10 mx-auto mb-6 opacity-50" />
-        <p className="font-cormorant text-3xl text-[var(--bark)] font-light italic mb-2">Ждём вас с нетерпением</p>
-        <p className="font-golos text-[var(--bark-light)] text-sm tracking-widest">Анна &amp; Михаил · 14.09.2025</p>
-        <LeafSprig className="w-8 h-12 text-[var(--sage)] opacity-30 mx-auto mt-6" />
-      </footer>
-
-      {/* Lightbox */}
-      {activePhoto !== null && (
-        <div
-          className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
-          onClick={() => setActivePhoto(null)}
-        >
-          <div className="relative max-w-2xl w-full" onClick={(e) => e.stopPropagation()}>
-            <img
-              src={GALLERY_PHOTOS[activePhoto].src}
-              alt={GALLERY_PHOTOS[activePhoto].caption}
-              className="w-full rounded-2xl shadow-2xl"
-            />
-            <p className="font-caveat text-white text-xl text-center mt-4">{GALLERY_PHOTOS[activePhoto].caption}</p>
-            <button
-              className="absolute -top-4 -right-4 w-9 h-9 bg-white rounded-full flex items-center justify-center shadow-lg hover:bg-[var(--terracotta)] hover:text-white transition-colors"
-              onClick={() => setActivePhoto(null)}
-            >
-              <Icon name="X" size={16} />
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

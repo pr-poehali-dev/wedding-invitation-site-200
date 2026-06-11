@@ -100,6 +100,16 @@
     --terracotta-light: #f2e0d5;
     --sage: #6b7d5a;
     --sage-light: #e3ead8;
+
+    /* Wedding invite palette */
+    --bg-page: #f7eef6;
+    --bg-hero: #fdf5f0;
+    --bg-purple: #ecdff0;
+    --bg-cream: #fdf8f0;
+    --pink-bright: #e85d9a;
+    --pink-medium: #d4669e;
+    --pink-dark: #5a2d4a;
+    --green-leaf: #5a7a3a;
   }
 
   * {
@@ -130,5 +140,30 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes popIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  70% {
+    transform: scale(1.06);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
   }
 }
