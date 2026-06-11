@@ -110,24 +110,11 @@ export default function Index() {
   }, []);
 
   return (
-    <div className="min-h-screen overflow-x-hidden" style={{ background: "var(--bg-page)", fontFamily: "'Nunito', sans-serif" }}>
+    <div className="min-h-screen overflow-x-hidden" style={{ fontFamily: "'Nunito', sans-serif", background: "linear-gradient(180deg, #fdf5f8 0%, #f5e8f8 18%, #ecdff0 35%, #e8f0f5 55%, #f0e8f5 75%, #fde8ef 90%, #f5e0ec 100%)" }}>
 
       {/* ── HERO ── */}
-      <section className="relative flex flex-col items-center pt-12 pb-0 px-5 overflow-hidden" style={{ background: "var(--bg-hero)" }}>
-        {/* Живой градиентный фон */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 right-0 w-72 h-72 rounded-full opacity-30"
-            style={{ background: "radial-gradient(circle, #f9c4df, transparent)", transform: "translate(20%, -20%)" }} />
-          <div className="absolute bottom-16 left-0 w-56 h-56 rounded-full opacity-25"
-            style={{ background: "radial-gradient(circle, #c8e6c9, transparent)", transform: "translate(-25%, 10%)" }} />
-          <div className="absolute top-1/3 left-1/2 w-96 h-96 rounded-full opacity-20"
-            style={{ background: "radial-gradient(circle, #f8bbd0, transparent)", transform: "translate(-50%, -40%)" }} />
-          {/* Пятнышки */}
-          <div className="absolute top-8 left-1/3 w-20 h-20 rounded-full opacity-15"
-            style={{ background: "radial-gradient(circle, var(--pink-bright), transparent)" }} />
-          <div className="absolute bottom-24 right-1/4 w-16 h-16 rounded-full opacity-20"
-            style={{ background: "radial-gradient(circle, var(--green-leaf), transparent)" }} />
-        </div>
+      <section className="relative flex flex-col items-center pt-12 pb-0 px-5 overflow-hidden" style={{ background: "transparent" }}>
+
         <Flower className="absolute top-4 left-4 text-[var(--pink-bright)]" size={30} />
         <Flower className="absolute top-6 right-6 text-[var(--green-leaf)]" size={22} />
         <Flower className="absolute top-24 right-3 text-[var(--pink-bright)]" size={16} />
@@ -158,31 +145,15 @@ export default function Index() {
           С радостью приглашаем вас<br />разделить с нами самые счастливые<br />моменты нашей жизни!
         </p>
 
-        <div className="flex flex-col items-center gap-1 mb-4 text-[var(--pink-medium)]"
+        <div className="flex flex-col items-center gap-1 mb-8 text-[var(--pink-medium)]"
           style={{ animation: "bounce 2s 1s infinite" }}>
           <Heart className="w-5 h-5" />
           <Icon name="ChevronDown" size={18} className="text-[var(--pink-medium)]" />
         </div>
-
-        <div className="w-full overflow-hidden leading-none mt-2">
-          <svg viewBox="0 0 500 40" className="w-full" style={{ fill: "var(--bg-purple)" }}>
-            <path d="M0 20 Q62.5 0 125 20 Q187.5 40 250 20 Q312.5 0 375 20 Q437.5 40 500 20 L500 40 L0 40 Z" />
-          </svg>
-        </div>
       </section>
 
       {/* ── КАЛЕНДАРЬ + ГАЛЕРЕЯ ── */}
-      <section className="px-4 pt-2 pb-8 relative overflow-hidden" style={{ background: "var(--bg-purple)" }}>
-        {/* Декоративный фон секции */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-0 w-64 h-64 rounded-full opacity-20"
-            style={{ background: "radial-gradient(circle, var(--pink-bright), transparent)", transform: "translate(-30%, -30%)" }} />
-          <div className="absolute bottom-0 right-0 w-80 h-80 rounded-full opacity-15"
-            style={{ background: "radial-gradient(circle, var(--pink-medium), transparent)", transform: "translate(30%, 30%)" }} />
-          <div className="absolute top-1/2 left-1/2 w-48 h-48 rounded-full opacity-10"
-            style={{ background: "radial-gradient(circle, var(--green-leaf), transparent)", transform: "translate(-50%, -50%)" }} />
-        </div>
-
+      <section className="px-4 pt-2 pb-8 relative overflow-hidden" style={{ background: "transparent" }}>
         <div className="max-w-md mx-auto flex flex-col gap-6 relative z-10">
 
           {/* Календарь */}
@@ -236,8 +207,7 @@ export default function Index() {
       </section>
 
       {/* ── ТАЙМЕР ── */}
-      <section ref={timerSection.ref} className="px-5 py-10 relative overflow-hidden"
-        style={{ background: "linear-gradient(135deg, #e8d5f0 0%, #f5dde8 50%, #ddeae8 100%)" }}>
+      <section ref={timerSection.ref} className="px-5 py-10 relative overflow-hidden" style={{ background: "transparent" }}>
         <div className="max-w-md mx-auto rounded-3xl p-7 text-center"
           style={{
             background: "rgba(255,255,255,0.25)",
@@ -265,8 +235,7 @@ export default function Index() {
       </section>
 
       {/* ── ЛОКАЦИИ ── */}
-      <section ref={locSection.ref} className="px-4 pb-10 relative overflow-hidden"
-        style={{ background: "linear-gradient(160deg, #f0e4f5 0%, #ecdff0 60%, #e8f0e4 100%)" }}>
+      <section ref={locSection.ref} className="px-4 pb-10 relative overflow-hidden" style={{ background: "transparent" }}>
         <div className="max-w-md mx-auto space-y-6">
           {LOCATIONS.map((loc, i) => (
             <div key={i} className="bg-[var(--bg-cream)] rounded-3xl p-5 shadow-md relative overflow-hidden"
@@ -279,27 +248,22 @@ export default function Index() {
               <h3 className="font-bold text-[var(--pink-dark)] text-lg mb-3 flex items-center gap-2">
                 <span>{loc.icon}</span> {loc.title}
               </h3>
-              <div className="flex gap-4">
-                <div className="flex-1 space-y-2">
-                  {[
-                    { icon: "Calendar" as const, text: loc.date },
-                    { icon: "Clock" as const, text: loc.time },
-                    { icon: "MapPin" as const, text: loc.address },
-                  ].map(row => (
-                    <div key={row.icon} className="flex items-start gap-2">
-                      <Icon name={row.icon} size={14} className="text-[var(--green-leaf)] mt-0.5 flex-shrink-0" />
-                      <span className="text-xs text-[var(--pink-dark)] leading-snug">{row.text}</span>
-                    </div>
-                  ))}
-                  <a href={loc.mapUrl} target="_blank" rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 mt-3 text-white text-xs font-bold px-4 py-2 rounded-full shadow hover:opacity-90 transition-opacity"
-                    style={{ background: "var(--green-leaf)" }}>
-                    Открыть карту <Icon name="Navigation" size={12} />
-                  </a>
-                </div>
-                <div className="w-28 h-28 rounded-2xl overflow-hidden flex-shrink-0 shadow">
-                  <img src={loc.img} alt={loc.title} className="w-full h-full object-cover" />
-                </div>
+              <div className="space-y-2">
+                {[
+                  { icon: "Calendar" as const, text: loc.date },
+                  { icon: "Clock" as const, text: loc.time },
+                  { icon: "MapPin" as const, text: loc.address },
+                ].map(row => (
+                  <div key={row.icon} className="flex items-start gap-2">
+                    <Icon name={row.icon} size={14} className="text-[var(--green-leaf)] mt-0.5 flex-shrink-0" />
+                    <span className="text-sm text-[var(--pink-dark)] leading-snug">{row.text}</span>
+                  </div>
+                ))}
+                <a href={loc.mapUrl} target="_blank" rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 mt-3 text-white text-xs font-bold px-4 py-2 rounded-full shadow hover:opacity-90 transition-opacity"
+                  style={{ background: "var(--green-leaf)" }}>
+                  Открыть карту <Icon name="Navigation" size={12} />
+                </a>
               </div>
               <Squiggle className="w-24 text-[var(--pink-medium)] opacity-30 mt-3" />
             </div>
@@ -308,8 +272,7 @@ export default function Index() {
       </section>
 
       {/* ── ПОЖЕЛАНИЯ ── */}
-      <section ref={wishSection.ref} className="px-4 py-12 relative overflow-hidden"
-        style={{ background: "linear-gradient(180deg, #fdf8f0 0%, #fde8ef 100%)" }}>
+      <section ref={wishSection.ref} className="px-4 py-12 relative overflow-hidden" style={{ background: "transparent" }}>
         <div className="max-w-md mx-auto text-center"
           style={{
             opacity: wishSection.visible ? 1 : 0,
@@ -336,8 +299,7 @@ export default function Index() {
       </section>
 
       {/* ── ФИНАЛ ── */}
-      <section className="px-4 py-14 text-center relative overflow-hidden"
-        style={{ background: "linear-gradient(135deg, #f5dde8 0%, #e8d5f0 50%, #d5e8e0 100%)" }}>
+      <section className="px-4 py-14 text-center relative overflow-hidden" style={{ background: "transparent" }}>
         <Flower className="mx-auto text-[var(--pink-bright)] mb-3" size={24} />
         <h2 className="text-4xl text-[var(--pink-dark)] leading-snug mb-4"
           style={{ fontFamily: "'Pacifico', cursive" }}>
