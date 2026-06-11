@@ -91,11 +91,44 @@
 }
 
 @layer base {
+  :root {
+    --cream: #f5f0e8;
+    --parchment: #ede6d6;
+    --bark: #3d2f1f;
+    --bark-light: #7a6248;
+    --terracotta: #b5603a;
+    --terracotta-light: #f2e0d5;
+    --sage: #6b7d5a;
+    --sage-light: #e3ead8;
+  }
+
   * {
     @apply border-border;
   }
 
   body {
     @apply bg-background text-foreground;
+    background-color: var(--cream);
+  }
+
+  .font-cormorant {
+    font-family: "Cormorant Garamond", serif;
+  }
+  .font-golos {
+    font-family: "Golos Text", sans-serif;
+  }
+  .font-caveat {
+    font-family: "Caveat", cursive;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
