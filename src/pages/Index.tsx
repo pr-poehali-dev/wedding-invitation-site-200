@@ -23,10 +23,10 @@ const LOCATIONS = [
     icon: "🥂",
     title: "Праздничный банкет",
     date: "12 сентября 2026",
-    time: "15:00",
-    address: "массив Орлов Овраг, Кленовая улица, 35, Самара",
+    time: "16:00",
+    address: "СНТ Салют, 7 квартал, 5",
     dresscode: "Свободный удобный стиль",
-    mapUrl: "https://yandex.ru/maps/?text=Кленовая+35+Самара",
+    mapUrl: "https://yandex.ru/maps/?text=СНТ+Салют+7+квартал+5+Самара",
     img: "https://cdn.poehali.dev/projects/9ba9d2d6-628e-48a6-ae4a-468969368bae/files/9be49a14-6697-4c73-bea4-d22c030528f1.jpg",
   },
 ];
